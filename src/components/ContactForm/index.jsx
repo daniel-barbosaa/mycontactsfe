@@ -6,22 +6,21 @@ import Button from '../../components/Button';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import isValidEmail from '../../utils/IsValidEmail';
+import formatPhone from '../../utils/formatPhone';
+import useErrors from '../../hooks/useErros';
 export default function ContactForm({ buttonLabel }) {
+  const { setError, removeError, getErroMessageByFieldName } = useErrors();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [category, setCategory] = useState('');
-  const [errors, setErrors] = useState([]);
 
-  function handleChangeName(e) {
+  function handleNameChange(e) {
     setName(e.target.value);
     if (!e.target.value) {
-      setErrors(prevState => [
-        ...prevState,
-        { field: 'name', message: 'Nome é obrigatório' },
-      ]);
+      setError({ field: 'name', message: 'Nome é obrigatório' });
     } else {
-      setErrors(prevState => prevState.filter(error => error.field !== 'name'));
+      removeError('name');
     }
   }
 
@@ -29,43 +28,35 @@ export default function ContactForm({ buttonLabel }) {
     setEmail(e.target.value);
 
     if (e.target.value && !isValidEmail(e.target.value)) {
-      const errorEmailExists = errors.find(error => error.field === 'email');
-
-      if (errorEmailExists) {
-        return;
-      }
-
-      setErrors(prevState => [
-        ...prevState,
-        { field: 'email', message: 'Email é obrigatório' },
-      ]);
+      setEmail(e.target.value);
+      setError({ field: 'email', message: 'Email é obrigatório' });
     } else {
-      setErrors(prevState =>
-        prevState.filter(error => error.field !== 'email'),
-      );
+      removeError('email');
     }
+  }
+
+  function handlePhoneChange(e) {
+    setPhone(formatPhone(e.target.value));
   }
 
   function handleSubmit(e) {
     e.preventDefault();
-  }
-
-  function getErroMessageByFieldName(fieldName) {
-    return errors.find(error => error.field === fieldName)?.message;
+    console.log({ name, phone, category, email });
   }
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit} noValidate>
       <Formgroup error={getErroMessageByFieldName('name')}>
         <Input
           placeholder="Nome"
           value={name}
-          onChange={handleChangeName}
+          onChange={handleNameChange}
           error={getErroMessageByFieldName('name')}
         />
       </Formgroup>
       <Formgroup error={getErroMessageByFieldName('email')}>
         <Input
+          type="email"
           placeholder="E-mail"
           value={email}
           onChange={handleEmailChange}
@@ -76,7 +67,8 @@ export default function ContactForm({ buttonLabel }) {
         <Input
           placeholder="Telefone"
           value={phone}
-          onChange={e => setPhone(e.target.value)}
+          onChange={handlePhoneChange}
+          maxLength={15}
         />
       </Formgroup>
 
