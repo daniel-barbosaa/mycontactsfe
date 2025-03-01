@@ -34,24 +34,19 @@ const round = keyframes`
   }
 `;
 
-export const Container = styled.div`
-  & + & {
-    margin-top: 16px;
-  }
-
-  small {
-    color: ${({ theme }) => theme.colors.danger.main};
-    margin-top: 8px;
-    display: block;
-    font-size: 12px;
-  }
-
-  .form-item {
-    position: relative;
-    .loader {
-      position: absolute;
-      top: 18px;
-      right: 18px;
-    }
-  }
+export const StyledSpinner = styled.div`
+  color: ${({ theme }) => theme.colors.primary.main};
+  font-size: ${({ size }) => `${size}px`};
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation:
+    ${load} 1.7s infinite ease,
+    ${round} 1.7s infinite ease;
+  animation:
+    ${load} 1.7s infinite ease,
+    ${round} 1.7s infinite ease;
 `;
