@@ -6,12 +6,14 @@ import Header from '../Header';
 import { BrowserRouter } from 'react-router-dom';
 
 import AppRoutes from '../../Routes';
+import ToastContainer from '../Toast/ToastContainer';
 
 function App() {
   return (
     <BrowserRouter>
       <ThemeProvider theme={defaultTheme}>
         <GlobalStyles />
+        <ToastContainer />
         <Container>
           <Header />
           <AppRoutes />
