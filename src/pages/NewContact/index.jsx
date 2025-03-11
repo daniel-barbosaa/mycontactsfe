@@ -14,7 +14,14 @@ export default function NewContact() {
       };
       await ContactsService.createContacts(contact);
     } catch (error) {
-      alert('Erro ao cadastrar contato');
+      //   alert('Erro ao cadastrar contato');
+      const event = new CustomEvent('addtoast', {
+        detail: {
+          type: 'danger',
+          text: 'Ocorreu um erro ao cadastrar contato!',
+        },
+      });
+      document.dispatchEvent(event);
     }
   }
   return (
