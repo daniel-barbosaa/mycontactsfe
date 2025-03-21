@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import ToastMessage from '../ToastMessage';
 import { Container } from './styles';
 import { toastEventManager } from '../../../utils/toast';
@@ -6,14 +6,18 @@ import { toastEventManager } from '../../../utils/toast';
 export default function ToastContainer() {
   const [messages, setMessages] = useState([]);
 
+  const [isMounted, setIsMounted] = useState(false);
+
   useEffect(() => {
+    if (isMounted) return;
+    setIsMounted(true);
+
     const handleAddToast = ({ type, text, duration }) => {
       setMessages(prevState => [
         ...prevState,
         { id: Math.random(), type, text, duration },
       ]);
     };
-
     toastEventManager.on('addtoast', handleAddToast);
 
     return () => {
