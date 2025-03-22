@@ -7,11 +7,12 @@ import Loader from '../../components/Loader';
 import toast from '../../utils/toast';
 
 export default function EditContact() {
-  const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
+  const [playerName, setPlayerName] = useState('');
   const isMounted = useRef(false);
   const contactsFormRef = useRef(null);
+  const { id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isMounted.current) return;
@@ -22,6 +23,7 @@ export default function EditContact() {
         const contacts = await ContactsService.getContactById(id);
         contactsFormRef.current.setFieldsValues(contacts);
         setIsLoading(false);
+        setPlayerName(contacts.name);
       } catch {
         navigate('/');
         toast({
@@ -33,11 +35,36 @@ export default function EditContact() {
     loadContact();
   }, [id]);
 
-  function handleSubmit() {}
+  async function handleSubmit(formData) {
+    try {
+      const contact = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        category_id: formData.categoryId,
+      };
+      const contactData = await ContactsService.updateContact(id, contact);
+      toast({
+        type: 'success',
+        text: 'Contato editado com sucesso!',
+        duration: 3000,
+      });
+      setPlayerName(contactData.name);
+    } catch {
+      toast({
+        type: 'danger',
+        text: 'Ocorreu um erro ao editar o contato!',
+        duration: 3000,
+      });
+    }
+  }
+
   return (
     <>
       <Loader isLoading={isLoading} />
-      <PageHeader title={'Editar Daniel barbosa'} />
+      <PageHeader
+        title={isLoading ? 'Carregando...' : `Editar ${playerName}`}
+      />
       <ContactForm
         buttonLabel={'Salvar alterações'}
         onSubmit={handleSubmit}
