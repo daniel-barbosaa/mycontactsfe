@@ -6,12 +6,7 @@ import { toastEventManager } from '../../../utils/toast';
 export default function ToastContainer() {
   const [messages, setMessages] = useState([]);
 
-  const [isMounted, setIsMounted] = useState(false);
-
   useEffect(() => {
-    if (isMounted) return;
-    setIsMounted(true);
-
     const handleAddToast = ({ type, text, duration }) => {
       setMessages(prevState => [
         ...prevState,
