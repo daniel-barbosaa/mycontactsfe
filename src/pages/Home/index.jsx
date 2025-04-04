@@ -1,29 +1,15 @@
-import {
-  Card,
-  Container,
-  EmptyListContainer,
-  ErrorContainer,
-  Header,
-  InputSearchContainer,
-  ListHeader,
-  SearchNotFoundContainer,
-} from './styles';
-
-import { Link } from 'react-router-dom';
-import { useEffect, useState, useMemo, useCallback } from 'react';
-
-import arrow from '../../assets/images/icons/arrow.svg';
-import edit from '../../assets/images/icons/edit.svg';
-import trash from '../../assets/images/icons/trash.svg';
-import sad from '../../assets/images/sad.svg';
-import emptyBox from '../../assets/images/empty-box.svg';
-import magnifierQuestion from '../../assets/images/magnifier-question.svg';
-import toast from '../../utils/toast';
+import { Container } from './styles';
 
 import Loader from '../../components/Loader';
-import Button from '../../components/Button';
-import Modal from '../../components/Modal';
 import useHome from './useHome';
+import InputSearch from './components/InputSearch';
+import Header from './components/Header';
+import ErrorStatus from './components/ErrorStatus';
+import EmptyList from './components/EmptyList';
+import SearchNotFound from './components/SearchNotFound';
+
+import ContactsList from './components/ContactsList';
+import Modal from '../../components/Modal';
 
 export default function Home() {
   const {
@@ -43,117 +29,50 @@ export default function Home() {
     handleChangeSearchTerm,
     orderBy,
   } = useHome();
+  const hasContacts = contacts.length > 0;
+  const isListEmpty = !hasError && !isLoading && !hasContacts;
+  const isSearchEmpty = !hasError && hasContacts && filteredContacts.length < 1;
 
   return (
     <Container>
-      <Modal
-        isLoading={isLoadingDelete}
-        danger
-        title={`Tem certeza que deseja remover contato "${contactBeingDeleted?.name}"?`}
-        cancelLabel="Cancelar"
-        confirmLabel="Deletar"
-        onCancel={handleClodeDeleteModal}
-        onConfirm={handleConfirmDeleteContact}
-        visible={isDeleteModalVisible}
-      >
-        <p>Essa operação não poderá ser desfeita!</p>
-      </Modal>
       <Loader isLoading={isLoading} />
-      {contacts.length > 0 && !hasError && (
-        <InputSearchContainer>
-          <input
-            value={searchTerm}
-            type="text"
-            placeholder="Pesquise pelo nome..."
-            onChange={handleChangeSearchTerm}
-          />
-        </InputSearchContainer>
+
+      {hasContacts && !hasError && (
+        <InputSearch value={searchTerm} onChange={handleChangeSearchTerm} />
       )}
       <Header
-        $justifyContent={
-          hasError
-            ? 'flex-end'
-            : contacts.length > 0
-              ? 'space-between'
-              : 'center'
-        }
-      >
-        {!hasError && contacts.length > 0 && (
-          <strong>
-            {filteredContacts.length}
-            {filteredContacts.length === 1 ? ' contato' : ' contatos'}
-          </strong>
-        )}
-        <Link to="/new">Novo contato</Link>
-      </Header>
-      {hasError && (
-        <ErrorContainer>
-          <img src={sad} alt="sad" />
-          <div className="details">
-            <strong>Ocorreu um erro ao obter os seus contatos!</strong>
-            <Button onClick={handleTryAgain} type="button">
-              {' '}
-              Tentar Novamente
-            </Button>
-          </div>
-        </ErrorContainer>
-      )}
-      {!hasError && (
+        hasError={hasError}
+        quantityOfContacts={contacts.length}
+        quantityFilteredContacts={filteredContacts.length}
+      />
+
+      {hasError && <ErrorStatus onTryAgain={handleTryAgain} />}
+
+      {isListEmpty && <EmptyList />}
+
+      {isSearchEmpty && <SearchNotFound searchTerm={searchTerm} />}
+
+      {hasContacts && (
         <>
-          {contacts.length < 1 && !isLoading && (
-            <EmptyListContainer>
-              <img src={emptyBox} alt="empty-box" />
-              <p>
-                Você ainda não tem nenhum contato cadastrado! Clique no botão
-                <strong> ”Novo contato”</strong> à cima para cadastrar o seu
-                primeiro!
-              </p>
-            </EmptyListContainer>
-          )}
-          {contacts.length > 0 && filteredContacts.length < 1 && (
-            <SearchNotFoundContainer>
-              <img src={magnifierQuestion} alt="Magnifier question" />
-              <span>
-                Nenhum resultado foi encontrado para{' '}
-                <strong>{searchTerm}</strong> .
-              </span>
-            </SearchNotFoundContainer>
-          )}
-          {filteredContacts.length > 0 && (
-            <ListHeader $orderBy={orderBy}>
-              <button type="button" onClick={handleToggleOrderBy}>
-                <span>Nome</span>
-                <img src={arrow} alt="seta" />
-              </button>
-            </ListHeader>
-          )}
-          {filteredContacts.map(contact => (
-            <Card key={contact.id}>
-              <div className="info">
-                <div className="contact-name">
-                  <strong>{contact.name}</strong>
-                  {contact.category.name && (
-                    <small>{contact.category.name}</small>
-                  )}
-                </div>
-                <span>{contact.email}</span>
-                <span>{contact.phone}</span>
-              </div>
-              <div className="actions">
-                <Link to={`/edit/${contact.id}`}>
-                  <img src={edit} alt="Edit" />
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleDeleteContact(contact);
-                  }}
-                >
-                  <img src={trash} alt="delete" />
-                </button>
-              </div>
-            </Card>
-          ))}
+          <ContactsList
+            filteredContacts={filteredContacts}
+            orderBy={orderBy}
+            onToggleOrderBy={handleToggleOrderBy}
+            onDeleteContact={handleDeleteContact}
+          />
+
+          <Modal
+            isLoading={isLoadingDelete}
+            danger
+            title={`Tem certeza que deseja remover contato "${contactBeingDeleted?.name}"?`}
+            cancelLabel="Cancelar"
+            confirmLabel="Deletar"
+            onCancel={handleClodeDeleteModal}
+            onConfirm={handleConfirmDeleteContact}
+            visible={isDeleteModalVisible}
+          >
+            <p>Essa operação não poderá ser desfeita!</p>
+          </Modal>
         </>
       )}
     </Container>
