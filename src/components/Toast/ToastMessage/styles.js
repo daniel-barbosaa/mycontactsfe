@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 const containerVariants = {
   default: css`
     background: ${({ theme }) => theme.colors.primary.main};
@@ -11,6 +11,28 @@ const containerVariants = {
   `,
 };
 
+const messageIn = keyframes`
+   from {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+const messageOut = keyframes`
+   from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(100px);
+
+  }
+`;
+
 export const Container = styled.div`
   padding: 16px 32px;
   color: #ffff;
@@ -20,8 +42,15 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  animation: ${messageIn} 0.3s ease;
+  ${({ $isLeaving }) =>
+    $isLeaving &&
+    css`
+      animation: ${messageOut} 0.3s ease;
+    `}
 
   ${({ type }) => containerVariants[type] || containerVariants.default}
+
 
   & + & {
     margin-top: 12px;
