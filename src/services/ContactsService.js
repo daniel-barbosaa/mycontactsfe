@@ -1,10 +1,10 @@
-import delay from '../utils/delay';
 import ContactMapper from './mappers/ContactMapper';
 import HttpClient from './utils/HttpClient';
+const apiMyContactsUrl = import.meta.env.VITE_APP_API_URL;
 
 class ContactsService {
   constructor() {
-    this.httpClient = new HttpClient('http://localhost:3000');
+    this.httpClient = new HttpClient(apiMyContactsUrl);
   }
 
   async listContacts(orderBy = 'asc') {

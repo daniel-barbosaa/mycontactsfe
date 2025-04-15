@@ -30,7 +30,6 @@ export default function useAnimatedList() {
           handleAnimationEnd(itemId);
         };
         const removeListener = () => {
-          console.log(`remove listener executor para ${itemId}`);
           animatedElements.removeEventListener('animationend', onAnimationEnd);
         };
 
@@ -43,7 +42,6 @@ export default function useAnimatedList() {
   useEffect(() => {
     const removeListeners = animatedEndListeners.current;
     return () => {
-      console.log('cleanUp executou');
       removeListeners.forEach(romeveListener => romeveListener());
     };
   }, []);

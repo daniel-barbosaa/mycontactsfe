@@ -1,9 +1,10 @@
 import CategoryMapper from './mappers/CategoryMapper';
 import HttpClient from './utils/HttpClient';
+const apiMyContactsUrl = import.meta.env.VITE_APP_API_URL;
 
 class CategoriesService {
   constructor() {
-    this.httpClient = new HttpClient('http://localhost:3000');
+    this.httpClient = new HttpClient(apiMyContactsUrl);
   }
 
   async listCategories() {
