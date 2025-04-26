@@ -4,6 +4,8 @@ import edit from '../../../../assets/images/icons/edit.svg';
 import trash from '../../../../assets/images/icons/trash.svg';
 
 import { Card, ListHeader } from './styles';
+import useAnimatedList from '../../../../hooks/useAnimatedList';
+import { useEffect } from 'react';
 
 export default function ContactsList({
   filteredContacts,
@@ -11,6 +13,16 @@ export default function ContactsList({
   onToggleOrderBy,
   onDeleteContact,
 }) {
+  const { renderList, setItems: setContacts } = useAnimatedList();
+
+  useEffect(() => {
+    const contactWithIndex = filteredContacts.map((contact, index) => ({
+      ...contact,
+      _originalIndex: index,
+    }));
+    setContacts(contactWithIndex);
+  }, [filteredContacts]);
+
   return (
     <>
       {filteredContacts.length > 0 && (
@@ -21,8 +33,9 @@ export default function ContactsList({
           </button>
         </ListHeader>
       )}
-      {filteredContacts.map(contact => (
-        <Card key={contact.id}>
+
+      {renderList(contact => (
+        <Card key={contact.id} $delay={contact._originalIndex * 0.1}>
           <div className="info">
             <div className="contact-name">
               <strong>{contact.name}</strong>

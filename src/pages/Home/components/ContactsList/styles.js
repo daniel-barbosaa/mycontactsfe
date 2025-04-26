@@ -1,4 +1,14 @@
-import styled from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
+const contactIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
 
 export const ListHeader = styled.header`
   margin-top: 24px;
@@ -30,6 +40,10 @@ export const Card = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  animation: ${contactIn} 0.5s ease forwards;
+  animation-delay: ${({ $delay }) => $delay}s;
+  opacity: 0;
+  transition: box-shadow 0.2s ease-in;
 
   & + & {
     margin-top: 16px;

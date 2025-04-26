@@ -42,11 +42,11 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  animation: ${messageIn} 0.3s ease;
+  animation: ${messageIn} 0.3s ease forwards;
   ${({ $isLeaving }) =>
     $isLeaving &&
     css`
-      animation: ${messageOut} 0.3s ease;
+      animation: ${messageOut} 0.3s ease forwards;
     `}
 
   ${({ type }) => containerVariants[type] || containerVariants.default}

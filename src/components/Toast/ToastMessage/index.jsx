@@ -18,6 +18,7 @@ function ToastMessage({ message, onRemoveMessage, isLeaving, animatedRef }) {
   function handleRemoveToast() {
     onRemoveMessage(message.id);
   }
+  
   return (
     <Container
       type={message.type}

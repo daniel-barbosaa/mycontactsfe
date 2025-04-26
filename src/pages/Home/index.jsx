@@ -10,8 +10,10 @@ import SearchNotFound from './components/SearchNotFound';
 
 import ContactsList from './components/ContactsList';
 import Modal from '../../components/Modal';
+import useAnimatedList from '../../hooks/useAnimatedList';
 
 export default function Home() {
+  const { handleRemoveItems } = useAnimatedList();
   const {
     isLoadingDelete,
     contactBeingDeleted,
@@ -28,7 +30,8 @@ export default function Home() {
     handleDeleteContact,
     handleChangeSearchTerm,
     orderBy,
-  } = useHome();
+  } = useHome(handleRemoveItems);
+
   const hasContacts = contacts.length > 0;
   const isListEmpty = !hasError && !isLoading && !hasContacts;
   const isSearchEmpty = !hasError && hasContacts && filteredContacts.length < 1;

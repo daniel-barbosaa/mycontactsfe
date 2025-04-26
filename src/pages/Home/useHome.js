@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo, useCallback } from 'react';
 import ContactsService from '../../services/ContactsService';
 import toast from '../../utils/toast';
 
-export default function useHome() {
+export default function useHome(handleRemoveItems) {
   const [contacts, setContacts] = useState([]);
   const [orderBy, setOrderBy] = useState('asc');
   const [searchTerm, setSearchTerm] = useState('');
@@ -63,8 +63,10 @@ export default function useHome() {
   async function handleConfirmDeleteContact() {
     try {
       setIsLoadingDelete(true);
+
       await ContactsService.deleteContact(contactBeingDeleted.id);
       handleClodeDeleteModal();
+      handleRemoveItems(contactBeingDeleted.id);
       setContacts(prevState =>
         prevState.filter(contact => contact.id !== contactBeingDeleted.id),
       );
