@@ -1,7 +1,7 @@
 <h1>📇 MyContacts</h1>
 <p> Gerenciador de contatos simples e eficiente, com cadastro, edição, exclusão, ordenação e pesquisa.
 <br /> ⚡ Projeto desenvolvido como MVP funcional, focado em explorar ao máximo os recursos nativos das tecnologias, evitando dependências desnecessárias. </p>
-<h2>🚀 Como testar o projeto</h2> 
+
 <p> <strong>🔗 Deploy:</strong> <a href="https://mycontactsfe-qncd.vercel.app" target="_blank" rel="noopener noreferrer">MyContacts Front-end</a> </p>
 <p> Este é um projeto fullstack. Para explorar todos os recursos da aplicação, é necessário também rodar a API: <a href="https://github.com/daniel-barbosaa/mycontactsapi-postgresql" target="_blank" rel="noopener noreferrer">MyContacts Back-end</a>. </p>
 <h2>📚 Índice</h2>
